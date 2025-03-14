@@ -5,15 +5,14 @@ BUILD_DIR=build
 all: build
 
 build:
-	go build -o $(BINARY_NAME) main.go
+	go build -o $(BUILD_DIR)/$(BINARY_NAME) main.go
 
 install: build
-	sudo mv $(BINARY_NAME) $(INSTALL_DIR)/$(BINARY_NAME)
+	sudo mv $(BUILD_DIR)/$(BINARY_NAME) $(INSTALL_DIR)/$(BINARY_NAME)
 
 clean:
-	rm -f $(BINARY_NAME)
+	rm -f $(BUILD_DIR)/$(BINARY_NAME)
 
-# Cross-build para multiplataforma (binários em ./build)
 release:
 	@echo "Building for multiple platforms..."
 	@mkdir -p $(BUILD_DIR)

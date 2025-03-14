@@ -11,7 +11,7 @@ import (
 
 var (
 	dir         string
-	fileExt     string
+	fileExts    []string
 	outputFile  string
 	depthLimit  int
 	ignoreList  []string
@@ -46,13 +46,13 @@ var rootCmd = &cobra.Command{
 			return fmt.Errorf("error getting absolute path: %w", err)
 		}
 
-		return printTree(absRoot, "", fileExt, output, absRoot, 0)
+		return printTree(absRoot, "", output, absRoot, 0)
 	},
 }
 
 func init() {
 	rootCmd.Flags().StringVarP(&dir, "directory", "d", ".", "Directory to display file tree")
-	rootCmd.Flags().StringVarP(&fileExt, "extension", "e", "", "File extension to be displayed")
+	rootCmd.Flags().StringSliceVarP(&fileExts, "extension", "e", []string{}, "Comma-separated list of file extensions to be displayed (e.g., -e go,md,txt)")
 	rootCmd.Flags().StringVarP(&outputFile, "output", "o", "", "File to save output")
 	rootCmd.Flags().IntVarP(&depthLimit, "depth", "l", -1, "Depth limit for display")
 	rootCmd.Flags().StringSliceVarP(&ignoreList, "ignore", "i", []string{}, "List of files/directories to ignore")
@@ -69,7 +69,7 @@ func main() {
 	}
 }
 
-func printTree(root string, prefix string, fileExt string, output *os.File, basePath string, currentDepth int) error {
+func printTree(root string, prefix string, output *os.File, basePath string, currentDepth int) error {
 	if depthLimit != -1 && currentDepth > depthLimit {
 		return nil
 	}
@@ -112,10 +112,10 @@ func printTree(root string, prefix string, fileExt string, output *os.File, base
 			if i == len(entries)-1 {
 				nextPrefix = prefix + "    "
 			}
-			if err := printTree(filepath.Join(root, entry.Name()), nextPrefix, fileExt, output, basePath, currentDepth+1); err != nil {
+			if err := printTree(filepath.Join(root, entry.Name()), nextPrefix, output, basePath, currentDepth+1); err != nil {
 				return err
 			}
-		} else if fileExt != "" && strings.HasSuffix(entry.Name(), fileExt) {
+		} else if len(fileExts) > 0 && hasAllowedExtension(entry.Name(), fileExts) {
 			printFileContent(filepath.Join(root, entry.Name()), output, basePath)
 		}
 	}
@@ -151,6 +151,19 @@ func formatSize(size int64) string {
 func isIgnored(name string) bool {
 	for _, pattern := range ignoreList {
 		if strings.Contains(name, pattern) {
+			return true
+		}
+	}
+	return false
+}
+
+func hasAllowedExtension(filename string, extensions []string) bool {
+	for _, ext := range extensions {
+		ext = strings.TrimSpace(ext)
+		if !strings.HasPrefix(ext, ".") {
+			ext = "." + ext
+		}
+		if strings.HasSuffix(filename, ext) {
 			return true
 		}
 	}

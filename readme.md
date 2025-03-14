@@ -34,6 +34,8 @@ or
 go install github.com/MichelDiz/tree2@latest
 ```
 
+And you should have `export PATH=$PATH:$HOME/go/bin`
+
 ## Usage
 Run the command to display the directory tree:
 ```sh
@@ -82,4 +84,3 @@ sudo rm /usr/local/bin/tree2
 
 ## License
 This project is open-source and available under the MIT License.
-
