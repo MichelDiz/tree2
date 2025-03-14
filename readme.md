@@ -36,10 +36,30 @@ go install github.com/MichelDiz/tree2@latest
 
 And you should have `export PATH=$PATH:$HOME/go/bin`
 
+### Using install scripts (Linux/macOS)
+
+```sh
+bash install.sh v1.0.0
+```
+or
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/MichelDiz/tree2/main/install.sh | bash
+```
+
+### Using install scripts (Windows PowerShell)
+
+Open PowerShell and run:
+
+```powershell
+irm https://raw.githubusercontent.com/MichelDiz/tree2/main/install-tree2.ps1 | iex
+```
+
 ## Usage
+
 Run the command to display the directory tree:
 ```sh
-tree2
+tree2 -h
 ```
 
 ### Available Flags
