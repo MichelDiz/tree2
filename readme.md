@@ -28,6 +28,11 @@ Alternatively, you can compile manually using:
 ```sh
 go build -o tree2 main.go
 ```
+or
+
+```sh
+go install github.com/MichelDiz/tree2@latest
+```
 
 ## Usage
 Run the command to display the directory tree:
